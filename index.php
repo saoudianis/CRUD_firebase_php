@@ -12,9 +12,9 @@ $rdb= $database->getReference($refid)->getValue();
 $link= mysqli_connect("localhost","root","","note");
 
 
-$Email= mysqli_real_escape_string($link ,$_POST['email']);
-$Pass= mysqli_real_escape_string($link ,$_POST['password']);
-$id= mysqli_real_escape_string($link ,$_POST['id']);
+$Email= $_POST['email'];
+$Pass= $_POST['password'];
+$id= $_POST['id'];
 
 
 //buttons
