@@ -9,14 +9,17 @@ $refid = "Users";
 $rdb= $database->getReference($refid)->getValue();
  
 
-$link= mysqli_connect("localhost","root","","note");
 
 
-$Email= $_POST['email'];
+$fname= $_POST['fname'];
+$lname= $_POST['lname'];
 $Pass= $_POST['password'];
 $id= $_POST['id'];
-
-
+//first name + last name
+$tb =[
+          'nom' => $fname,  
+            'prenom' => $lname
+];
 //buttons
 //Add Button
 if($_POST['btnadd']){
@@ -25,7 +28,7 @@ if($_POST['btnadd']){
     
 
 $AppData = [
-	'username'	=>	$Email,
+	'username'	=>	$tb,
 	'password'	=>	$Pass
 ];
 
@@ -33,7 +36,7 @@ $ref='Users/';
 $postdata = $database->getReference($ref)->push($AppData);
     
     
-    header("location: login.php");
+    header("location: index.php");
 }
 //update button
 if($_POST['btnedt']){
@@ -42,7 +45,7 @@ if($_POST['btnedt']){
     
 
 $AppData = [
-	'username'	=>	$Email,
+	'username'	=>	$tb,
 	'password'	=>	$Pass
 ];
 
@@ -50,18 +53,16 @@ $ref='Users/'.$id;
 $updatedata = $database->getReference($ref)->update($AppData);
     
     
-    header("location: login.php");
+    header("location: index.php");
 }
 //delete button
 if($_POST['btndel']){
-    $sqls = "delete from note where id=$id";
-    mysqli_query($link,$sqls);
-    header("location: login.php");
+   
     
     //firebase
     $ref='Users/'.$id;
     $database->getReference($ref)->remove();
-    header("location: login.php");
+    header("location: index.php");
 }
 
 ?>
@@ -144,8 +145,10 @@ form {
          
 <form method="post">
     <div class="MyForm">
-    <label>Email</label><br>
-        <input type="text" id="email" name="email"><br>
+    <label>Nom</label><br>
+        <input type="text" id="fname" name="fname"><br>
+    <label>Prenom</label><br>
+        <input type="text" id="lname" name="lname"><br>    
     <label>Password</label><br>
         <input type="text" id="password" name="password"><br>
     <label>Id</label>    <br>
@@ -168,15 +171,22 @@ form {
     <br><br>
     <table border="1" id="info">
     <tr class="header">
-        <th>Email</th>
+        <th>Fname</th>
+        <th>Lname</th>
         <th>Password</th>
         <th>id</th>
         </tr>
         <?php 
         foreach($rdb as $key => $row)
         {
+           
+            $rows = $row["username"];
+               
+               
+            
             echo "<tr>";
-            echo "<td>" . $row["username"] . "</td>";
+            echo "<td>" . $rows["nom"] . "</td>";
+             echo "<td>" . $rows["prenom"] . "</td>";
             echo "<td>" . $row["password"] . "</td>";
             echo "<td>" . $key . "</td>";
             echo "</tr>";
@@ -191,12 +201,12 @@ var tbl = document.getElementById('info');
     for(var i=1; i<tbl.rows.length;i++){
         tbl.rows[i].onclick=function(){
             
-         document.getElementById("email").value = this.cells[0].innerHTML;
+         document.getElementById("fname").value = this.cells[0].innerHTML;
           
-         
-         document.getElementById("password").value = this.cells[1].innerHTML; 
+         document.getElementById("lname").value = this.cells[1].innerHTML;
+         document.getElementById("password").value = this.cells[2].innerHTML; 
             
-        document.getElementById("id").value = this.cells[2].innerHTML;     
+        document.getElementById("id").value = this.cells[3].innerHTML;     
          
         }
     }
